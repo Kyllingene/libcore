@@ -1,7 +1,7 @@
 #ifndef _CORE_MALLOCH
 #define _CORE_MALLOCH
 
-#include "../types/types.h"
+#include "../types/types.hpp"
 
 //! Allocate `size` bytes on the heap.
 //! 

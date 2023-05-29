@@ -1,12 +1,13 @@
     .text
 .globl _brk
+.type _brk, @function
 _brk:
-    pushq %rbp
-    movq %rsp, %rbp
+    push %rbp
+    mov %rsp, %rbp
     
-    movq $12, %rax
+    mov $12, %rax
     syscall
     
-    movq %rbp, %rsp
-    popq %rbp 
+    mov %rbp, %rsp
+    pop %rbp
     ret

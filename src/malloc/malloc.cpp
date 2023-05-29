@@ -1,6 +1,24 @@
 #include "malloc.h"
-#include "../mem/mem.h"
-extern void *_brk(size_t new_break); // defined in brk.s, just the brk syscall
+#include "../mem/mem.hpp"
+extern "C" void *_brk(size_t new_break); // defined in brk.s, just the brk syscall
+
+// void *brk(size_t new_break) {
+//   asm (
+//     ".text"
+//     ".globl _brk"
+//     ".type _brk, @function"
+//     "_brk:"
+//       "push %rbp"
+//       "mov %rsp, %rbp"
+      
+//       "mov $12, %rax"
+//       "syscall"
+      
+//       "mov %rbp, %rsp"
+//       "pop %rbp"
+//       "ret"
+//   );
+// }
 
 void *start_block = NULL;
 
@@ -24,7 +42,7 @@ void *sbrk(size_st offset) {
 }
 
 struct block_meta *find_free_block(struct block_meta **last, size_t size) {
-  struct block_meta *current = start_block;
+  struct block_meta *current = (struct block_meta*)start_block;
   while (current && !(current->free && current->size >= size)) {
     *last = current;
     current = current->next;
@@ -34,15 +52,15 @@ struct block_meta *find_free_block(struct block_meta **last, size_t size) {
 
 struct block_meta *request_space(struct block_meta *last, size_t size) {
   struct block_meta *block;
-  block = sbrk(0);
+  block = (struct block_meta*)sbrk(0);
   void *request = sbrk(size + sizeof(struct block_meta));
   if (request == (void *)-1)
-    return NULL; // sbrk failed.
+    return (struct block_meta*)NULL; // sbrk failed.
 
   if (last) // NULL on first request.
     last->next = block;
   block->size = size;
-  block->next = NULL;
+  block->next = (struct block_meta*)NULL;
   block->free = 0;
   return block;
 }
@@ -55,12 +73,12 @@ void *malloc(size_t size) {
     return NULL;
 
   if (!start_block) { // First call.
-    block = request_space(NULL, size);
+    block = request_space((struct block_meta*)NULL, size);
     if (!block)
       return NULL;
     start_block = block;
   } else {
-    struct block_meta *last = start_block;
+    struct block_meta *last = (struct block_meta*)start_block;
     block = find_free_block(&last, size);
     if (!block) { // Failed to find free block.
       block = request_space(last, size);
@@ -118,4 +136,12 @@ void free(void *ptr) {
     return;
 
   block_ptr->free = 1;
+}
+
+void operator delete  ( void* ptr, size_t sz ) noexcept {
+  free(ptr);
+}
+
+void operator delete  ( void* ptr ) noexcept {
+  free(ptr);
 }

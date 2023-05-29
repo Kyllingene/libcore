@@ -1,12 +1,13 @@
     .text
 .globl _brk
+.type _brk, @function
 _brk:
-    pushl %ebp
-    movl %esp, %ebp
+    push %ebp
+    mov %esp, %ebp
     
-    movl $12, %eax
+    mov $12, %eax
     syscall
     
-    movl %ebp, %esp
-    popl %ebp 
+    mov %ebp, %esp
+    pop %ebp
     ret

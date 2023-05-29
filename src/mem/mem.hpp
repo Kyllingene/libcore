@@ -1,7 +1,7 @@
 #ifndef _CORE_MEMH
 #define _CORE_MEMH
 
-#include "../types/types.h"
+#include "../types/types.hpp"
 
 //! Set a region of memory to a value.
 void* memset(void* ptr, int data, size_t size);
