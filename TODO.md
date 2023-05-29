@@ -1,5 +1,5 @@
 # Goals
-- [ ] Terminal I/O
+- [o] Terminal I/O
 - [o] Malloc (see chores)
 - [ ] ? Better memory management
 - [ ] File I/O

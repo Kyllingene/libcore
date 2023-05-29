@@ -1,31 +1,13 @@
-#include "malloc.h"
+#include "cralloc.hpp"
 #include "../mem/mem.hpp"
 extern "C" void *_brk(size_t new_break); // defined in brk.s, just the brk syscall
 
-// void *brk(size_t new_break) {
-//   asm (
-//     ".text"
-//     ".globl _brk"
-//     ".type _brk, @function"
-//     "_brk:"
-//       "push %rbp"
-//       "mov %rsp, %rbp"
-      
-//       "mov $12, %rax"
-//       "syscall"
-      
-//       "mov %rbp, %rsp"
-//       "pop %rbp"
-//       "ret"
-//   );
-// }
-
-void *start_block = NULL;
+void *start_block = nullptr;
 
 struct block_meta {
   size_t size;
   struct block_meta *next;
-  int free;
+  bool free;
 };
 
 void *get_break() { return _brk(0); }
@@ -34,7 +16,7 @@ struct block_meta *get_block_ptr(void *ptr) {
   return (struct block_meta *)ptr - 1;
 }
 
-void *sbrk(size_st offset) {
+void *sbrk(ssize_t offset) {
   if (!offset)
     return get_break();
   else
@@ -55,27 +37,27 @@ struct block_meta *request_space(struct block_meta *last, size_t size) {
   block = (struct block_meta*)sbrk(0);
   void *request = sbrk(size + sizeof(struct block_meta));
   if (request == (void *)-1)
-    return (struct block_meta*)NULL; // sbrk failed.
+    return nullptr; // sbrk failed.
 
   if (last) // NULL on first request.
     last->next = block;
   block->size = size;
-  block->next = (struct block_meta*)NULL;
-  block->free = 0;
+  block->next = nullptr;
+  block->free = false;
   return block;
 }
 
-void *malloc(size_t size) {
+void *cralloc(size_t size) {
   struct block_meta *block;
   // TODO: align size?
 
   if (size <= 0)
-    return NULL;
+    return nullptr;
 
   if (!start_block) { // First call.
-    block = request_space((struct block_meta*)NULL, size);
+    block = request_space(nullptr, size);
     if (!block)
-      return NULL;
+      return nullptr;
     start_block = block;
   } else {
     struct block_meta *last = (struct block_meta*)start_block;
@@ -83,30 +65,29 @@ void *malloc(size_t size) {
     if (!block) { // Failed to find free block.
       block = request_space(last, size);
       if (!block)
-        return NULL;
+        return nullptr;
     } else { // Found free block
       // TODO: consider splitting block here.
-      block->free = 0;
+      block->free = false;
     }
   }
 
   return (block + 1);
 }
 
-void *calloc(size_t nelem, size_t elsize) {
-  size_t size = nelem * elsize; // TODO: check for overflow.
-  void *ptr = malloc(size);
+void *zalloc(size_t size) {
+  void *ptr = cralloc(size);
   if (!ptr)
-    return NULL;
+    return nullptr;
 
   memset(ptr, 0, size);
   return ptr;
 }
 
-void *realloc(void *ptr, size_t size) {
+void *crealloc(void *ptr, size_t size) {
   if (!ptr) {
     // NULL ptr. realloc should act like malloc.
-    return malloc(size);
+    return cralloc(size);
   }
 
   struct block_meta *block_ptr = get_block_ptr(ptr);
@@ -116,17 +97,16 @@ void *realloc(void *ptr, size_t size) {
 
   // Need to really realloc. Malloc new space and free old space.
   // Then copy old data to new space.
-  void *new_ptr;
-  new_ptr = malloc(size);
+  void *new_ptr = cralloc(size);
   if (!new_ptr)
-    return NULL; // TODO: set errno on failure.
-  memcpy(new_ptr, ptr, block_ptr->size);
-  free(ptr);
+    return nullptr; // TODO: set errno on failure.
+  memcpy(ptr, new_ptr, block_ptr->size);
+  cree(ptr);
   return new_ptr;
 }
 
 //! Free memory allocated by `malloc` or `calloc`.
-void free(void *ptr) {
+void cree(void *ptr) {
   if (!ptr)
     return;
 
@@ -135,13 +115,13 @@ void free(void *ptr) {
   if (block_ptr->free)
     return;
 
-  block_ptr->free = 1;
+  block_ptr->free = true;
 }
 
 void operator delete  ( void* ptr, size_t sz ) noexcept {
-  free(ptr);
+  cree(ptr);
 }
 
 void operator delete  ( void* ptr ) noexcept {
-  free(ptr);
+  cree(ptr);
 }

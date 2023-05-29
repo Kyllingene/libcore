@@ -1,9 +1,11 @@
 #ifndef _CORE_COREH
 #define _CORE_COREH
 
-#include "malloc/malloc.hpp"
+#include "cralloc/cralloc.hpp"
 #include "types/types.hpp"
-#include "io/print.hpp"
+#include "types/pointer.hpp"
+#include "io/io.hpp"
 #include "str/str.hpp"
+#include "mem/mem.hpp"
 
 #endif

@@ -35,12 +35,14 @@
 
 #ifdef CORE_64
 typedef unsigned long size_t;
-typedef long size_st;
+typedef long ssize_t;
 #elif defined(CORE_32)
 typedef unsigned int size_t;
-typedef int size_st;
+typedef int ssize_t;
 #else
 #error Cannot determine architecture, please supply either the CORE_32 or CORE_64 macro.
 #endif
+
+typedef unsigned int filed;
 
 #endif

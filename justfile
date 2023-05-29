@@ -6,41 +6,41 @@ alias a := all
 alias c := clean
 
 CC := "g++"
-OBJFLAGS := "-c -fPIC -m"
-OUTFLAGS := "-fPIC -m"
+OBJFLAGS := "-ggdb -c -fPIC -m"
+OUTFLAGS := "-ggdb -fPIC -m"
 
 arch := `uname -m | grep -o "64" || echo "32"`
 
 # Build libcore as a static library.
 static target=arch: (build-temp target)
     rm -f build/libcore{{target}}.a
-    ar rcs build/libcore{{target}}.a temp/**/*.o
+    ar rcs build/libcore{{target}}.a `find temp -type f -name "*.o"`
 
 # Build libcore as a shared library.
 dynamic target=arch: (build-temp target)
     rm -f build/libcore{{target}}.so
-    {{CC}} {{OUTFLAGS}}{{target}} -fPIC -shared -o build/libcore{{target}}.so temp/**/*.o
+    {{CC}} {{OUTFLAGS}}{{target}} -fPIC -shared -o build/libcore{{target}}.so `find temp -type f -name "*.o"`
 
-# Run test/test.c; use for dev purposes only!
+# Run test/test.cpp; use for dev purposes only, it's not git tracked!
 test target=arch: (static target)
-    {{CC}} test/test.cpp -o test/test -static -Lbuild -lcore{{target}}
+    {{CC}} -ggdb test/test.cpp -o test/test -static -Lbuild -lcore{{target}}
     test/test
 
 build-temp target=arch:
     rm -rf temp
-    
-    mkdir -p temp/malloc
-    mkdir temp/io
-    mkdir temp/str
-    mkdir temp/mem
     mkdir -p build
 
-    {{CC}} {{OBJFLAGS}}{{target}} src/malloc/brk{{target}}.s -o temp/malloc/brk{{target}}.o
-    {{CC}} {{OBJFLAGS}}{{target}} src/malloc/malloc.cpp -o temp/malloc/malloc.o
-    {{CC}} {{OBJFLAGS}}{{target}} src/mem/mem.cpp -o temp/mem/mem.o
-    {{CC}} {{OBJFLAGS}}{{target}} src/io/print{{target}}.s -o temp/io/print{{target}}.o
-    {{CC}} {{OBJFLAGS}}{{target}} src/io/print.cpp -o temp/io/print.o
-    {{CC}} {{OBJFLAGS}}{{target}} src/str/str.cpp -o temp/str/str.o
+    for file in `find src -type f -name "*.c*"`; do \
+    mkdir -p "temp/`dirname $file`"; \
+    name=`basename $file`; \
+    {{CC}} {{OBJFLAGS}}{{target}} "$file" -o "temp/${file%.*}.o"; \
+    done
+
+    for file in `find src -type f -name "*{{target}}.s"`; do \
+    mkdir -p "temp/`dirname $file`"; \
+    name=`basename $file`; \
+    {{CC}} {{OBJFLAGS}}{{target}} "$file" -o "temp/${file%.*}.o"; \
+    done
 
 # Build all targets, both static and dynamic.
 all: (all-32) (all-64)

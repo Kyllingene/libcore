@@ -2,13 +2,18 @@
 #include "../mem/mem.hpp"
 
 size_t strlen(const char* str) {
-    size_t len = 0;
-    while (str[len])
-        len++;
+    size_t i = 0;
+    while (str[i])
+        i++;
 
-    return len;
+    return i;
 }
 
 char *strcpy(const char *source, char *dest) {
-    return (char*)memcpy((void*)source, dest, strlen(source));
+    size_t i;
+    for (i = 0; source[i]; i++)
+        dest[i] = source[i];
+
+    dest[i] = 0;
+    return dest;
 }
