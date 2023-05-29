@@ -3,15 +3,7 @@
 #include "../src/core.h"
 
 int main() {
-    int* mynum = calloc(1, sizeof(int));
-    printf("%p: %d\n", mynum, *mynum);
-    *mynum = 15;
+    printf("You have not written any tests.\n");
 
-    while (*mynum > 0) {
-        (*mynum)--;
-        printf("\t%d\n", *mynum);
-    }
-
-    free(mynum);
     return 0;
 }
