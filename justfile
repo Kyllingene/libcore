@@ -22,7 +22,7 @@ dynamic target=arch: (build-temp target)
 
 # Run test/test.cpp; use for dev purposes only, it's not git tracked!
 test target=arch: (static target)
-    {{CC}} -ggdb test/test.cpp -o test/test -static -Lbuild -lcore{{target}}
+    {{CC}} -m{{target}} -ggdb test/test.cpp -o test/test -static -Lbuild -lcore{{target}}
     test/test
 
 # Build all intermediary files. Use a different build command.
