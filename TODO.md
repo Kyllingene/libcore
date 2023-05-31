@@ -3,21 +3,22 @@
     - [X] getch
     - [X] getl
     - [X] print(l)
-    - [ ] printf
+    - [-]
+        - Replaced with itoa, ptoa, and ftoa
 - [X] File I/O
     - [X] open
     - [X] close
     - [X] read
     - [X] write
-- [o] Malloc (see chores)
+- [o] Make cralloc work well
+    - [X] Basic functionality
+    - [o] Make sure it's not buggy
 - [ ] ? Better memory management
-- [ ] File I/O
+    - What do I even mean by that
 - [ ] Networking
 - [ ] Useful types
-    - [ ] String
-    - [ ] Vec
-    - [ ] Smart pointer
-    - [ ] ? Option/Result
-
-# Chores
-- Make sure malloc works perfectly
+    - [X] String
+    - [X] Vec
+    - [o] Smart pointer
+        - Requires testing
+- [-] Varargs
