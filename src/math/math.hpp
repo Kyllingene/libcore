@@ -3,7 +3,11 @@
 
 #include "../types/types.hpp"
 
-//! Raise a number to a power.
-size_t pow(size_t x, size_t exp);
+namespace core {
+
+    //! Raise a number to a power.
+    size_t pow(size_t x, size_t exp);
+
+}
 
 #endif

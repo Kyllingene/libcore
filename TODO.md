@@ -4,21 +4,34 @@
     - [X] getl
     - [X] print(l)
     - [-]
-        - Replaced with itoa, ptoa, and ftoa
+        - Replaced with itoa, ptoa, and dtoa
 - [X] File I/O
     - [X] open
     - [X] close
     - [X] read
     - [X] write
+    - [ ] listing directories
 - [o] Make cralloc work well
     - [X] Basic functionality
     - [o] Make sure it's not buggy
-- [ ] ? Better memory management
-    - What do I even mean by that
 - [ ] Networking
+    - [ ] connect
+    - [ ] bind
+    - [ ] listen
+    - [ ] accept
+- [ ] Threading / process management
+    - [ ] (v)fork
+    - [ ] execve
+    - [ ] exec
+    - [ ] vfork+exec wrapper
+    - [ ] getpid
+    - [ ] clone
+    - [ ] exit
+    - [ ] kill
 - [ ] Useful types
     - [X] String
     - [X] Vec
     - [o] Smart pointer
         - Requires testing
 - [-] Varargs
+- [ ] exit

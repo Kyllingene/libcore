@@ -1,27 +1,32 @@
 #include "io.hpp"
-extern "C" int _write(int fd, const char* str, size_t len);
 
-void putch(char ch) {
-    _write(1, &ch, 1);
-}
+namespace core {
 
-void printlen(const char* str, size_t len) {
-    _write(1, str, len);
-}
+    extern "C" int _write(int fd, const char* str, size_t len);
 
-void print(const char* str) {
-    _write(1, str, strlen(str));
-}
+    void putch(char ch) {
+        _write(1, &ch, 1);
+    }
 
-void println(const char* str) {
-    _write(1, str, strlen(str));
-    putch('\n');
-}
+    void printlen(const char* str, size_t len) {
+        _write(1, str, len);
+    }
 
-void printi(ssize_t value, int radix) {
-    print(itoa(value, radix));
-}
+    void print(const char* str) {
+        _write(1, str, strlen(str));
+    }
 
-void printf(float value) {
-    print(ftoa(value));
+    void println(const char* str) {
+        _write(1, str, strlen(str));
+        putch('\n');
+    }
+
+    void printi(ssize_t value, int radix) {
+        print(itoa(value, radix));
+    }
+
+    void printd(float value) {
+        print(dtoa(value));
+    }
+
 }

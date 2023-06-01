@@ -3,10 +3,14 @@
 
 #include "../types/types.hpp"
 
-//! Set a region of memory to a value.
-void* memset(void* ptr, int data, size_t size);
+    namespace core {
 
-//! Copy one region of memory to another.
-void* memcpy(void* source, const void* dest, size_t size);
+    //! Set a region of memory to a value.
+    void* memset(void* ptr, int data, size_t size);
+
+    //! Copy one region of memory to another.
+    void* memcpy(const void* source, void* dest, size_t size);
+
+}
 
 #endif

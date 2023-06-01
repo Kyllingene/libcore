@@ -3,13 +3,20 @@
 
 #include "../cralloc/cralloc.hpp"
 
-template<class T>
-class Pointer {
-    T* data;
+namespace core {
+
+    template<class T>
+    class spointer {
+        T* data;
 
     public:
-        Pointer(T* obj) {
+        spointer(T* obj) {
             data = obj;
+        }
+
+        ~spointer() {
+            T obj = *data;
+            cree(data);
         }
 
         //! Get a pointer to the underlying data.
@@ -17,10 +24,19 @@ class Pointer {
             return data;
         }
 
-        ~Pointer() {
-            T obj = *data;
-            cree(data);
+        operator T*() {
+            return deref();
         }
-};
+
+        operator T**() {
+            return &data;
+        }
+
+        T operator [](size_t i) {
+            return data[i];
+        }
+    };
+
+}
 
 #endif

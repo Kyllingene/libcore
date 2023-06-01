@@ -1,15 +1,19 @@
 #include "mem.hpp"
 
-void* memset(void* dest, int data, size_t size) {
-    for (size_t i = 0; i < size; i++)
-        ((char*)dest)[i] = data;
+namespace core {
 
-    return dest;
-}
+    void* memset(void* dest, int data, size_t size) {
+        for (size_t i = 0; i < size; i++)
+            ((char*)dest)[i] = data;
 
-void* memcpy(void* source, const void* dest, size_t size) {
-    for (size_t i = 0; i < size; i++)
-        ((char*)dest)[i] = ((char*)source)[i];
+        return dest;
+    }
 
-    return source;
+    void* memcpy(const void* source, void* dest, size_t size) {
+        for (size_t i = 0; i < size; i++)
+            ((char*)dest)[i] = ((char*)source)[i];
+
+        return dest;
+    }
+
 }

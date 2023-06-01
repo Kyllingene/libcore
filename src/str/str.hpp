@@ -5,22 +5,29 @@
 #include "../cralloc/cralloc.hpp"
 #include "../mem/mem.hpp"
 
-//! Returns the length of a string in characters (excludes null byte).
-size_t strlen(const char* str);
+namespace core {
 
-//! Copies a string from one place to another.
-char *strcpy(const char *source, char *dest);
+    //! Returns the length of a string in characters (excludes null byte).
+    size_t strlen(const char* str);
 
-//! Reverses a string inplace.
-void reverse(char* str, size_t length);
+    //! Copies a string from one place to another.
+    char* strcpy(const char* source, char* dest);
 
-//! Formats an integer into a string.
-char* itoa(ssize_t value, int radix);
+    //! Copies a string from one place to another, with a max length.
+    char* strlcpy(const char* source, char* dest, size_t length);
 
-//! Formats a pointer into a string.
-char* ptoa(void* value);
+    //! Reverses a string in-place.
+    void reverse(char* str, size_t length);
 
-//! Formats a double into a string.
-char* ftoa(double value);
+    //! Formats an integer into a string.
+    char* itoa(ssize_t value, int radix);
+
+    //! Formats a pointer into a string.
+    char* ptoa(void* value);
+
+    //! Formats a double into a string.
+    char* dtoa(double value);
+
+}
 
 #endif
